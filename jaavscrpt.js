@@ -11,7 +11,6 @@ const techClubsData = [
         faqs: [
             { question: "Do I need advanced technical skills to join as a first-year student?", answer: "Not at all. Most teams look for attitude, logic, and a willingness to learn over existing expertise. Since these are multi-disciplinary teams, they provide rigorous internal training." },
             { question: "What is the time commitment required?", answer: "Joining a technical club is a significant commitment. During peak competition seasons, teams often work late hours in the workshop to meet fabrication deadlines. However, the experience gained is often cited by alumni as the most valuable part of their engineering degree." },
-            { question: "What software stack do the Automatons use?", answer: "We work with everything from low-level C++ for microcontrollers and Arduino to advanced ROS (Robot Operating System) and computer vision for autonomous navigation." },
             { question: "What kind of robots do you build?", answer: "We build high-performance robots for national competitions like ABU Robocon, ranging from manual-controlled bots to fully autonomous machines." }
         ]
     },
