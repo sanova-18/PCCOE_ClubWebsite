@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | PCCOE Clubs</title>
+    <link rel="stylesheet" href="ssyle.css"> <style>
+        .admin-container { padding: 4rem 2rem; max-width: 1000px; margin: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 2rem; background: var(--card-bg, #fff); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        .admin-table th { background: var(--primary-color, #007bff); color: white; }
+        .login-overlay { position: fixed; inset: 0; background: var(--bg-main, #f4f4f4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .login-box { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="admin-login" class="login-overlay">
+        <div class="login-box">
+            <h2>Admin Access</h2>
+            <p>Please enter the secret password</p>
+            <input type="password" id="admin-password" placeholder="Password" style="padding: 10px; margin: 10px 0; width: 100%;">
+            <button onclick="checkAdminPassword()" class="register-btn">Unlock Dashboard</button>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        
+        <h1>Club Registrations</h1>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Club Name</th>
+                    <th>Student Name</th>
+                    <th>Dept</th>
+                    <th>Reason</th>
+                
+                   
+                </tr>
+            </thead>
+            
+            <tbody id="registration-list">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 1. Password Protection Logic
+        function checkAdminPassword() {
+            const pass = document.getElementById('admin-password').value;
+            if (pass === "pccoe123") { // Change this to your desired password
+                document.getElementById('admin-login').classList.add('hidden');
+                fetchRegistrations();
+            } else {
+                alert("Incorrect Password!");
+            }
+        }
+
+        // 2. Fetch Data from your Backend
+        async function fetchRegistrations() {
+            try {
+                const response = await fetch('http://localhost:5000/api/registrations');
+                const data = await response.json();
+                
+                const list = document.getElementById('registration-list');
+                list.innerHTML = data.map(reg => `
+                    <tr>
+                        <td><strong>${reg.clubName}</strong></td>
+                        <td>${reg.studentName}</td>
+                        <td>${reg.department}</td>
+                        <td>${reg.reason}</td>
+                       
+                        <button onclick="deleteRegistration('${reg._id}')">Delete</button>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                alert("Error fetching data. Is your server running?");
+            }
+        }
+
+         async function deleteRegistration(id) {
+    if (confirm("Are you sure?")) {
+        // Use backticks here so the ${id} is actually replaced by the MongoDB ID
+        const response = await fetch(`http://localhost:5000/api/registrations/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("Deleted!");
+            fetchRegistrations(); // This re-runs your fetch function to clear the table
+        } else {
+            alert("Delete failed on server.");
+        }
+    }
+}
+    </script>
+
+   
+
+        <script src="jaavscrpt.js"></script>
+</body>
+</html>
